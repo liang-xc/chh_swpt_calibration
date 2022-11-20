@@ -47,7 +47,7 @@ class YieldCurve(TermStructure):
         """
         return DiscountCurve(
             self.time_grid,
-            np.array([-np.exp(-r * t) for t, r in zip(self.time_grid, self.rates)]),
+            np.array([np.exp(-r * t) for t, r in zip(self.time_grid, self.rates)]),
         )
 
     def to_forward_curve(self) -> "ForwardCurve":
@@ -57,7 +57,7 @@ class YieldCurve(TermStructure):
         Returns:
             ForwardCurve: forward curve
         """
-        f = np.zeros(self.time_grid)
+        f = np.zeros(len(self.time_grid))
         f[0] = self.rates[0]
         for i in range(1, len(self.time_grid)):
             f[i] = (

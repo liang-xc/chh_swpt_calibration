@@ -1,6 +1,7 @@
 import numpy as np
-import term_structure
 from scipy import stats
+
+from . import term_structure
 
 
 class Swaption:
