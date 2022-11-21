@@ -30,6 +30,7 @@ class ChhCalibration:
             ]
         )
         self.df = discount_curve.df
+        self._calibrate()
 
     def _calibrate(self) -> None:
         """
@@ -62,3 +63,26 @@ class ChhCalibration:
                 self.chi[j][i] = chi_j_k
                 v_solve = lambda v, k: eq_20(v, k) - chi_j_k
                 self.v[j][i] = optimize.brentq(v_solve, 0, 1, args=psi_i[i])
+
+        self.xi = np.zeros(self.v.shape)
+        for i in range(len(self.xi)):
+            for j in range(len(self.xi[i])):
+
+                def v_sq(xi_i_j):
+                    self.xi[i][j] = xi_i_j
+                    sum = np.sum(
+                        [
+                            np.sum([self.xi[l][i + k - l] for k in range(j + 1)]) ** 2
+                            for l in range(i + 1)
+                        ]
+                    )
+                    return sum - self.v[i][j] ** 2
+
+                if self.v[i][j] > 0:
+                    self.xi[i][j] = optimize.brentq(v_sq, 0, 1)
+
+    def get_v(self) -> np.ndarray:
+        return self.v
+
+    def get_xi(self) -> np.ndarray:
+        return self.xi
