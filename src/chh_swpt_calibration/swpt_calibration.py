@@ -9,26 +9,6 @@ class ChhCalibration:
         self, price_grid: np.ndarray, discount_curve: term_structure.DiscountCurve
     ):
         self.price_grid = price_grid
-        self.tenor = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30])
-        self.expiry = np.array(
-            [
-                1,
-                18 / 12,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                15,
-                20,
-                25,
-                30,
-            ]
-        )
         self.df = discount_curve.df
         self._calibrate()
 
@@ -69,7 +49,6 @@ class ChhCalibration:
         self.xi = np.zeros(self.v.shape)
         for i in range(len(self.xi)):
             for j in range(len(self.xi[i])):
-
                 # eq 28 solve for xi
                 def v_sq(xi_i_j):
                     self.xi[i][j] = xi_i_j
@@ -82,7 +61,7 @@ class ChhCalibration:
                     return sum - self.v[i][j] ** 2
 
                 if self.v[i][j] > 0:
-                    self.xi[i][j] = optimize.brentq(v_sq, 0, 1)
+                    self.xi[i][j] = optimize.newton(v_sq, self.v[i][j])
 
     def get_v(self) -> np.ndarray:
         return self.v
