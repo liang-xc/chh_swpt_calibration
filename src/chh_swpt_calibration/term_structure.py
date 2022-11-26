@@ -34,7 +34,7 @@ class YieldCurve(TermStructure):
         if extrapolate:
             return interpolate.interp1d(
                 self.time_grid, self.rates, kind=method, fill_value="extrapolate"
-            )
+            )(t)
         else:
             return interpolate.interp1d(self.time_grid, self.rates, kind=method)(t)
 
