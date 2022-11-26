@@ -16,12 +16,14 @@ class Swaption:
         tenor: float,
         quote: float,
         forward_swap: float,
+        discount_curve: term_structure.DiscountCurve,
     ):
         self.strike: float = strike
         self.maturity: float = maturity  # option
         self.tenor: float = tenor  # swap
         self.quote: float = quote  # implied Black vol
         self.forward_swap: float = forward_swap
+        self.df: term_structure.DiscountCurve = discount_curve
         self.price: float = self._calc_price()
 
     def _calc_price(self) -> float:
@@ -41,4 +43,6 @@ class Swaption:
             - 1 / 2 * self.quote**2 * self.maturity
         ) / (self.quote * np.sqrt(self.maturity))
 
-        return self.forward_swap * stats.norm.cdf(d1) - self.strike * stats.norm.cdf(d2)
+        return self.df(self.maturity) * (
+            self.forward_swap * stats.norm.cdf(d1) - self.strike * stats.norm.cdf(d2)
+        )
