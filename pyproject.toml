@@ -1,3 +1,21 @@
+[project]
+name = "chh_swpt_calibration"
+version = "0.1.0"
+description = "swaption calibration based on Chen et al.(2019)"
+authors = [
+    { name = "Xiaocheng LIANG" }
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = { text = "GUN GPL v3.0" }
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "numpy >= 1.23.0",
+    "scipy >= 1.9.0"
+]
+
 [build-system]
-requires = ["setuptools>=42.0", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
